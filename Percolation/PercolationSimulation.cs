@@ -36,7 +36,6 @@ namespace Percolation
             do
             {
                 rnd.Next(0 ,size - 1);
-                
                 p.Percolate();
             }
             while (p.Percolate() != true);

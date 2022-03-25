@@ -13,7 +13,7 @@ namespace Percolation
             Percolation p = new Percolation(6);
             p.Percolate();
             PercolationSimulation p2 = new PercolationSimulation();
-            p2.PercolationValue(6);
+            //p2.PercolationValue(6);
         }
     }
 }

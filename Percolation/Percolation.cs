@@ -90,9 +90,6 @@ namespace Percolation
         private List<KeyValuePair<int, int>> CloseNeighbors(int i, int j)
         {
             List<KeyValuePair<int, int>> list = new List<KeyValuePair<int, int>>(); 
-            //if (IsFull(i, j) == true)
-            //{
-
 
                 if(IsOpen(i + 1,j))
                 {
@@ -112,12 +109,6 @@ namespace Percolation
                 }
 
             return list;
-            //}
-            //else
-            //{
-                
-            //}
-            //throw new NotImplementedException();
         }
 
         private void Open(int i, int j)
