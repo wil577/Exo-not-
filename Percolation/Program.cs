@@ -10,6 +10,10 @@ namespace Percolation
     {
         static void Main(string[] args)
         {
+            Percolation p = new Percolation(6);
+            p.Percolate();
+            PercolationSimulation p2 = new PercolationSimulation();
+            p2.PercolationValue(6);
         }
     }
 }

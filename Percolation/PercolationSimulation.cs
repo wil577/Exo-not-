@@ -24,11 +24,25 @@ namespace Percolation
     {
         public PclData MeanPercolationValue(int size, int t)
         {
+
             throw new NotImplementedException();
         }
 
         public double PercolationValue(int size)
         {
+            Percolation p = new Percolation(size);
+            Random rnd = new Random();
+            
+            do
+            {
+                rnd.Next(0 ,size - 1);
+                
+                p.Percolate();
+            }
+            while (p.Percolate() != true);
+
+
+
             throw new NotImplementedException();
         }
     }
