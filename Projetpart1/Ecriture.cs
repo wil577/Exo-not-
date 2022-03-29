@@ -21,10 +21,13 @@ namespace Projetpart1
         }*/
         public static void Ecriture1(string sttsPath, List<Compte> listCompte, List<Transaction> listTransaction)
         {
-            string ok = " ";
+            //string ok = "";
+            //string[] ok = new string[] { };
+            List<string> ok = new List<string>();
             int trNumeroPrec = 0;
             List<Compte> comptePrec = new List<Compte>();
             comptePrec = listCompte;
+            int i = -1;
 
             /*
              * Pour chaque transaction de ma liste:
@@ -39,7 +42,7 @@ namespace Projetpart1
                 //* Si l'expéditeur est égal à 0: c'est un dépôt: on rajoute le montant au destinataire
                 if(t.Montant != 0)
                 {
-                    if(t.Numero >= trNumeroPrec)
+                    if (t.Numero >= trNumeroPrec)
                     {
                         if (t.Destinataire != "0" && t.Expéditeur != "0")
                         {
@@ -50,13 +53,19 @@ namespace Projetpart1
                                     if (c.Numero == t.Destinataire)
                                     {
                                         c.Solde += t.Montant;
+                                        ok.Add("OK");
                                     }
 
                                     if (c.Numero == t.Expéditeur)
                                     {
                                         c.Solde -= t.Montant;
+                                        ok.Add("OK");
                                     }
                                 }
+                            }
+                            else
+                            {
+                                ok.Add("KO");
                             }
                         }
                         else if (t.Destinataire == "0" || t.Expéditeur == "0")
@@ -66,16 +75,25 @@ namespace Projetpart1
                                 if (c.Numero == t.Destinataire)
                                 {
                                     c.Solde += t.Montant;
+                                    ok.Add("OK");
                                 }
 
                                 if (c.Numero == t.Expéditeur)
                                 {
                                     c.Solde -= t.Montant;
-
+                                    ok.Add("OK");
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        ok.Add("KO");
+                    }
+                }
+                else
+                {
+                    ok.Add("KO");
                 }
                 trNumeroPrec = t.Numero;
                 
@@ -92,23 +110,29 @@ namespace Projetpart1
 
             using (StreamWriter fichierSortie = new StreamWriter(sttsPath))
             {
+                i = 1;
+
                 foreach (Transaction t in listTransaction)
                 {
+                    /*
                     foreach (Compte c1 in listCompte)
                     {
                         foreach (Compte c2 in comptePrec)
                         {
-                            if (c1.Solde != c2.Solde)
+                            if (c1.Numero == c2.Numero)
                             {
-                                ok = "KO";
+                                if (c1.Solde != c2.Solde)
+                                {
+                                    ok = "KO";
+                                }
+                                else if (c1.Solde == c2.Solde)
+                                {
+                                    ok = "OK";
+                                }
                             }
-                            else if (c1.Solde == c2.Solde)
-                            {
-                                ok = "OK";
-                            }
-                        }
-                    }
-                    fichierSortie.WriteLine(t.Numero + ";" + ok);
+                        }*/
+                    fichierSortie.WriteLine(t.Numero + ";" + ok[i]);
+                    i++;
                 }
             }
         }
