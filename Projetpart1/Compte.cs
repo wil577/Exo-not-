@@ -46,7 +46,7 @@ namespace Projetpart1
                     //isUnique = listCompte.Any(compte => compte.Numero.Equals(ligne[0]));
                     if (!string.IsNullOrWhiteSpace(ligne[1]))
                     {
-                        double.TryParse(ligne[1], out solde);
+                        double.TryParse(ligne[1].Replace('.',','), out solde);
                     }
                     else
                     {

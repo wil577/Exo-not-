@@ -11,13 +11,13 @@ namespace Projetpart1
     {
         public int Numero { get; set; }
         public double Montant { get; set; }
-        public string Expéditeur { get; set; }
+        public string Expediteur { get; set; }
         public string Destinataire { get; set; }
         public Transaction(int numero, double solde, string expéditeur, string destinataire)
         {
             Numero = numero;
             Montant = solde;
-            Expéditeur = expéditeur;
+            Expediteur = expéditeur;
             Destinataire = destinataire;
         }
 

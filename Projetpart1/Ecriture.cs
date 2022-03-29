@@ -38,34 +38,44 @@ namespace Projetpart1
 
             foreach (Transaction t in listTransaction)
             {
-                Console.WriteLine($"{t.Numero} : {t.Montant}$ de {t.Expéditeur} vers {t.Destinataire}");
+                Console.WriteLine($"{t.Numero} : {t.Montant}$ de {t.Expediteur} vers {t.Destinataire}");
                 //* Si l'expéditeur est égal à 0: c'est un dépôt: on rajoute le montant au destinataire
                 if (t.Montant > 0)
                 {
                     if (t.Numero > trNumeroPrec)
                     {
-                        if (t.Destinataire != "0" && t.Expéditeur != "0")
+                        if (t.Destinataire != "0" && t.Expediteur != "0")
                         {
-                            if (listCompte.Any(compte => compte.Numero.Equals(t.Destinataire)) && listCompte.Any(compte => compte.Numero.Equals(t.Expéditeur)))
+                            if (listCompte.Any(compte => compte.Numero.Equals(t.Destinataire)) && listCompte.Any(compte => compte.Numero.Equals(t.Expediteur)))
                             {
+                                Compte exp = listCompte.Find(x => x.Numero.Equals(t.Expediteur));
+                                Compte dst = listCompte.Find(x => x.Numero.Equals(t.Destinataire));
+                                if (t.Montant > 0 && exp.Solde - t.Montant >= 0)
+                                {
+                                    exp.Solde -= t.Montant;
+                                    dst.Solde += t.Montant;
+                                    Console.WriteLine(t.Numero + "OK 1");
+                                    results.Add($"{t.Numero};OK");
+                                }
+                                /*
                                 foreach (Compte c in listCompte)
                                 {
 
                                     if (c.Numero == t.Destinataire)
                                     {
-                                        if ((c.Solde - t.Montant) >= 0)
+                                        if (t.Montant >= 0)
                                         {
                                             c.Solde += t.Montant;
                                             Console.WriteLine(t.Numero + "OK 1");
                                             results.Add($"{t.Numero};OK");
                                         }
-                                        /*else
-                                        {
-                                            results.Add($"{t.Numero};KO");
-                                        }*/
+                                        //else
+                                        //{
+                                        //    results.Add($"{t.Numero};KO");
+                                        //}
                                     }
 
-                                    if (c.Numero == t.Expéditeur)
+                                    if (c.Numero == t.Expediteur)
                                     {
                                         if ((c.Solde - t.Montant) >= 0)
                                         {
@@ -82,6 +92,7 @@ namespace Projetpart1
                                         }
                                     }
                                 }
+                        */
                             }
                             else
                             {
@@ -89,8 +100,35 @@ namespace Projetpart1
                                 results.Add($"{t.Numero};KO");
                             }
                         }
-                        else if (t.Destinataire == "0" || t.Expéditeur == "0")
+                        else if (t.Destinataire == "0" || t.Expediteur != "0")
                         {
+                            Compte exp = listCompte.Find(x => x.Numero.Equals(t.Expediteur));
+                            if (exp != null && exp.Solde - t.Montant >= 0)
+                            {
+                                exp.Solde -= t.Montant;
+                                results.Add($"{t.Numero};OK");
+                            }
+                            else
+                            {
+                                Console.WriteLine(t.Numero + "KO 1");
+                                results.Add($"{t.Numero};KO");
+                            }
+                        }
+                        else if (t.Destinataire != "0" || t.Expediteur == "0")
+                        {
+                            Compte dst = listCompte.Find(x => x.Numero.Equals(t.Destinataire));
+                            if (dst != null && t.Montant > 0)
+                            {
+                                dst.Solde += t.Montant;
+                                results.Add($"{t.Numero};OK");
+                            }
+                            else
+                            {
+                                Console.WriteLine(t.Numero + "KO 1");
+                                results.Add($"{t.Numero};KO");
+                            }
+
+                            /*
                             foreach (Compte c in listCompte)
                             {
                                 if (c.Numero == t.Destinataire)
@@ -110,7 +148,7 @@ namespace Projetpart1
 
                                 }
 
-                                else if (c.Numero == t.Expéditeur)
+                                else if (c.Numero == t.Expediteur)
                                 {
                                     if ((c.Solde - t.Montant) >= 0)
                                     {
@@ -126,11 +164,17 @@ namespace Projetpart1
                                     }
 
                                 }
-                                /*else
-                                {
-                                    results.Add($"{t.Numero};KO");
-                                }*/
+                                //else
+                                //{
+                                //    results.Add($"{t.Numero};KO");
+                                //}
                             }
+                            */
+                        }
+                        else
+                        {
+                            Console.WriteLine(t.Numero + "KO 1");
+                            results.Add($"{t.Numero};KO");
                         }
                     }
                     else
