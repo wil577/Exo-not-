@@ -23,7 +23,7 @@ namespace Projetpart1
         {
             //string ok = "";
             //string[] ok = new string[] { };
-            List<string> ok = new List<string>();
+            List<string> results = new List<string>();
             int trNumeroPrec = 0;
             List<Compte> comptePrec = new List<Compte>();
             comptePrec = listCompte;
@@ -40,7 +40,7 @@ namespace Projetpart1
             {
                 Console.WriteLine($"{t.Numero} : {t.Montant}$ de {t.Expéditeur} vers {t.Destinataire}");
                 //* Si l'expéditeur est égal à 0: c'est un dépôt: on rajoute le montant au destinataire
-                if(t.Montant > 0)
+                if (t.Montant > 0)
                 {
                     if (t.Numero > trNumeroPrec)
                     {
@@ -57,11 +57,11 @@ namespace Projetpart1
                                         {
                                             c.Solde += t.Montant;
                                             Console.WriteLine(t.Numero + "OK 1");
-                                            ok.Add("OK");
+                                            results.Add($"{t.Numero};OK");
                                         }
                                         else
                                         {
-                                            ok.Add("KO");
+                                            results.Add($"{t.Numero};KO");
                                         }
                                     }
 
@@ -69,13 +69,14 @@ namespace Projetpart1
                                     {
                                         if ((c.Solde - t.Montant) >= 0)
                                         {
-                                        //Console.WriteLine(t.Numero + "OK 2");
+                                            //Console.WriteLine(t.Numero + "OK 2");
                                             c.Solde -= t.Montant;
-                                        //ok.Add("OK");
+                                            results.Add($"{t.Numero};OK");
+                                            //ok.Add("OK");
                                         }
                                         else
                                         {
-                                            ok.Add("KO");
+                                            results.Add($"{t.Numero};KO");
                                             Console.WriteLine(t.Numero + "KO 2");
                                             break;
                                         }
@@ -85,7 +86,7 @@ namespace Projetpart1
                             else
                             {
                                 Console.WriteLine(t.Numero + "KO 1");
-                                ok.Add("KO");
+                                results.Add($"{t.Numero};KO");
                             }
                         }
                         else if (t.Destinataire == "0" || t.Expéditeur == "0")
@@ -96,14 +97,18 @@ namespace Projetpart1
                                 {
                                     Console.WriteLine(t.Numero + "OK 3");
                                     c.Solde += t.Montant;
-                                    ok.Add("OK");
+                                    results.Add($"{t.Numero};OK");
                                 }
-                                
-                                if (c.Numero == t.Expéditeur)
+
+                                else if (c.Numero == t.Expéditeur)
                                 {
                                     Console.WriteLine(t.Numero + "OK 4");
                                     c.Solde -= t.Montant;
-                                    ok.Add("OK");
+                                    results.Add($"{t.Numero};OK");
+                                }
+                                else
+                                {
+                                    results.Add($"{t.Numero};KO");
                                 }
                             }
                         }
@@ -111,7 +116,7 @@ namespace Projetpart1
                     else
                     {
                         Console.WriteLine(t.Numero + "KO 3");
-                        ok.Add("KO");
+                        results.Add($"{t.Numero};KO");
                     }
                     if (t.Numero > trNumeroPrec)
                     {
@@ -121,10 +126,9 @@ namespace Projetpart1
                 else
                 {
                     Console.WriteLine(t.Numero + "KO 4");
-
-                    ok.Add("KO");
+                    results.Add($"{t.Numero};KO");
                 }
-                
+
                 Console.WriteLine("Statut des comptes");
                 Console.WriteLine("------------------");
                 foreach (Compte compte in listCompte)
@@ -138,12 +142,9 @@ namespace Projetpart1
 
             using (StreamWriter fichierSortie = new StreamWriter(sttsPath))
             {
-                i = 0;
-
-                foreach (Transaction t in listTransaction)
+                foreach (string r in results)
                 {
-                    fichierSortie.WriteLine(t.Numero + ";" + ok[i]);
-                    i++;
+                    fichierSortie.WriteLine(r);
                 }
             }
         }
