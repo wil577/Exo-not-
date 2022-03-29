@@ -59,10 +59,10 @@ namespace Projetpart1
                                             Console.WriteLine(t.Numero + "OK 1");
                                             results.Add($"{t.Numero};OK");
                                         }
-                                        else
+                                        /*else
                                         {
                                             results.Add($"{t.Numero};KO");
-                                        }
+                                        }*/
                                     }
 
                                     if (c.Numero == t.Expéditeur)
@@ -95,21 +95,41 @@ namespace Projetpart1
                             {
                                 if (c.Numero == t.Destinataire)
                                 {
-                                    Console.WriteLine(t.Numero + "OK 3");
-                                    c.Solde += t.Montant;
-                                    results.Add($"{t.Numero};OK");
+                                    if ((c.Solde - t.Montant) >= 0)
+                                    {
+                                        Console.WriteLine(t.Numero + "OK 3");
+                                        c.Solde += t.Montant;
+                                        results.Add($"{t.Numero};OK");
+                                    }
+                                    else
+                                    {
+                                        results.Add($"{t.Numero};KO");
+                                        Console.WriteLine(t.Numero + "KO 2");
+                                        break;
+                                    }
+
                                 }
 
                                 else if (c.Numero == t.Expéditeur)
                                 {
-                                    Console.WriteLine(t.Numero + "OK 4");
-                                    c.Solde -= t.Montant;
-                                    results.Add($"{t.Numero};OK");
+                                    if ((c.Solde - t.Montant) >= 0)
+                                    {
+                                        Console.WriteLine(t.Numero + "OK 4");
+                                        c.Solde -= t.Montant;
+                                        results.Add($"{t.Numero};OK");
+                                    }
+                                    else
+                                    {
+                                        results.Add($"{t.Numero};KO");
+                                        Console.WriteLine(t.Numero + "KO 2");
+                                        break;
+                                    }
+
                                 }
-                                else
+                                /*else
                                 {
                                     results.Add($"{t.Numero};KO");
-                                }
+                                }*/
                             }
                         }
                     }
