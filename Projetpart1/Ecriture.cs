@@ -90,12 +90,13 @@ namespace Projetpart1
                     {
                         ok.Add("KO");
                     }
+                    if (t.Numero > trNumeroPrec)
+                        trNumeroPrec = t.Numero;
                 }
                 else
                 {
                     ok.Add("KO");
                 }
-                trNumeroPrec = t.Numero;
                 
                 Console.WriteLine("Statut des comptes");
                 Console.WriteLine("------------------");
@@ -110,7 +111,7 @@ namespace Projetpart1
 
             using (StreamWriter fichierSortie = new StreamWriter(sttsPath))
             {
-                i = 0;
+                i = 1;
 
                 foreach (Transaction t in listTransaction)
                 {
