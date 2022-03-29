@@ -42,7 +42,7 @@ namespace Projetpart1
                 //* Si l'expéditeur est égal à 0: c'est un dépôt: on rajoute le montant au destinataire
                 if(t.Montant > 0)
                 {
-                    if (t.Numero >= trNumeroPrec)
+                    if (t.Numero > trNumeroPrec)
                     {
                         if (t.Destinataire != "0" && t.Expéditeur != "0")
                         {
@@ -50,28 +50,41 @@ namespace Projetpart1
                             {
                                 foreach (Compte c in listCompte)
                                 {
-                                    if (c.Numero == t.Expéditeur && (c.Solde - t.Montant) >= 0)
+
+                                    if (c.Numero == t.Destinataire)
                                     {
-                                        if (c.Numero == t.Destinataire)
+                                        if ((c.Solde - t.Montant) >= 0)
                                         {
                                             c.Solde += t.Montant;
+                                            Console.WriteLine(t.Numero + "OK 1");
                                             ok.Add("OK");
                                         }
-
-                                        if (c.Numero == t.Expéditeur)
+                                        else
                                         {
-                                            c.Solde -= t.Montant;
-                                            ok.Add("OK");
+                                            ok.Add("KO");
                                         }
                                     }
-                                    else
+
+                                    if (c.Numero == t.Expéditeur)
                                     {
-                                        ok.Add("KO");
+                                        if ((c.Solde - t.Montant) >= 0)
+                                        {
+                                        //Console.WriteLine(t.Numero + "OK 2");
+                                            c.Solde -= t.Montant;
+                                        //ok.Add("OK");
+                                        }
+                                        else
+                                        {
+                                            ok.Add("KO");
+                                            Console.WriteLine(t.Numero + "KO 2");
+                                            break;
+                                        }
                                     }
                                 }
                             }
                             else
                             {
+                                Console.WriteLine(t.Numero + "KO 1");
                                 ok.Add("KO");
                             }
                         }
@@ -79,36 +92,36 @@ namespace Projetpart1
                         {
                             foreach (Compte c in listCompte)
                             {
-                                if(c.Numero == t.Expéditeur && (c.Solde - t.Montant) >= 0)
+                                if (c.Numero == t.Destinataire)
                                 {
-                                    if (c.Numero == t.Destinataire)
-                                    {
-                                        c.Solde += t.Montant;
-                                        ok.Add("OK");
-                                    }
-
-                                    if (c.Numero == t.Expéditeur)
-                                    {
-                                        c.Solde -= t.Montant;
-                                        ok.Add("OK");
-                                    }
+                                    Console.WriteLine(t.Numero + "OK 3");
+                                    c.Solde += t.Montant;
+                                    ok.Add("OK");
                                 }
-                                else
+                                
+                                if (c.Numero == t.Expéditeur)
                                 {
-                                    ok.Add("KO");
+                                    Console.WriteLine(t.Numero + "OK 4");
+                                    c.Solde -= t.Montant;
+                                    ok.Add("OK");
                                 }
                             }
                         }
                     }
                     else
                     {
+                        Console.WriteLine(t.Numero + "KO 3");
                         ok.Add("KO");
                     }
                     if (t.Numero > trNumeroPrec)
+                    {
                         trNumeroPrec = t.Numero;
+                    }
                 }
                 else
                 {
+                    Console.WriteLine(t.Numero + "KO 4");
+
                     ok.Add("KO");
                 }
                 
@@ -125,27 +138,10 @@ namespace Projetpart1
 
             using (StreamWriter fichierSortie = new StreamWriter(sttsPath))
             {
-                i = 1;
+                i = 0;
 
                 foreach (Transaction t in listTransaction)
                 {
-                    /*
-                    foreach (Compte c1 in listCompte)
-                    {
-                        foreach (Compte c2 in comptePrec)
-                        {
-                            if (c1.Numero == c2.Numero)
-                            {
-                                if (c1.Solde != c2.Solde)
-                                {
-                                    ok = "KO";
-                                }
-                                else if (c1.Solde == c2.Solde)
-                                {
-                                    ok = "OK";
-                                }
-                            }
-                        }*/
                     fichierSortie.WriteLine(t.Numero + ";" + ok[i]);
                     i++;
                 }
