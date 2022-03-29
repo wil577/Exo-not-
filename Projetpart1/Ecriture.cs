@@ -50,16 +50,23 @@ namespace Projetpart1
                             {
                                 foreach (Compte c in listCompte)
                                 {
-                                    if (c.Numero == t.Destinataire)
+                                    if (c.Numero == t.Expéditeur && (c.Solde - t.Montant) >= 0)
                                     {
-                                        c.Solde += t.Montant;
-                                        ok.Add("OK");
-                                    }
+                                        if (c.Numero == t.Destinataire)
+                                        {
+                                            c.Solde += t.Montant;
+                                            ok.Add("OK");
+                                        }
 
-                                    if (c.Numero == t.Expéditeur)
+                                        if (c.Numero == t.Expéditeur)
+                                        {
+                                            c.Solde -= t.Montant;
+                                            ok.Add("OK");
+                                        }
+                                    }
+                                    else
                                     {
-                                        c.Solde -= t.Montant;
-                                        ok.Add("OK");
+                                        ok.Add("KO");
                                     }
                                 }
                             }
@@ -72,16 +79,23 @@ namespace Projetpart1
                         {
                             foreach (Compte c in listCompte)
                             {
-                                if (c.Numero == t.Destinataire)
+                                if(c.Numero == t.Expéditeur && (c.Solde - t.Montant) >= 0)
                                 {
-                                    c.Solde += t.Montant;
-                                    ok.Add("OK");
-                                }
+                                    if (c.Numero == t.Destinataire)
+                                    {
+                                        c.Solde += t.Montant;
+                                        ok.Add("OK");
+                                    }
 
-                                if (c.Numero == t.Expéditeur)
+                                    if (c.Numero == t.Expéditeur)
+                                    {
+                                        c.Solde -= t.Montant;
+                                        ok.Add("OK");
+                                    }
+                                }
+                                else
                                 {
-                                    c.Solde -= t.Montant;
-                                    ok.Add("OK");
+                                    ok.Add("KO");
                                 }
                             }
                         }
