@@ -9,21 +9,16 @@ namespace Projetpart1
 {
     public class Transaction
     {
-        public string Numero { get; set; }
-        public double Solde { get; set; }
+        public int Numero { get; set; }
+        public double Montant { get; set; }
         public string Expéditeur { get; set; }
         public string Destinataire { get; set; }
-        public Transaction(string numero, double solde, string expéditeur, string destinataire)
+        public Transaction(int numero, double solde, string expéditeur, string destinataire)
         {
             Numero = numero;
-            Solde = solde;
+            Montant = solde;
             Expéditeur = expéditeur;
             Destinataire = destinataire;
-        }
-
-        public void castor()
-        {
-
         }
 
         public static List<Transaction> ReadTrxnFile(string trxnPath)
@@ -39,7 +34,7 @@ namespace Projetpart1
                     //Séparer les champs
                     string[] ligne1 = ligneFichierEntree.Split(';');
 
-                    Transaction a = new Transaction(ligne1[0], double.Parse(ligne1[1]), ligne1[2], ligne1[3]);
+                    Transaction a = new Transaction(int.Parse(ligne1[0]), double.Parse(ligne1[1]), ligne1[2], ligne1[3]);
                     transaction.Add(a);
                 }
             }

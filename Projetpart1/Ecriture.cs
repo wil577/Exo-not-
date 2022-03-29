@@ -10,7 +10,7 @@ namespace Projetpart1
     internal class Ecriture
     {
 
-        public static Compte ChercherCompte(List<Compte> listeDesComptes, string identifiant)
+        /*public static Compte ChercherCompte(List<Compte> listeDesComptes, string identifiant)
         {
             foreach (Compte c in listeDesComptes)
             {
@@ -18,12 +18,13 @@ namespace Projetpart1
                     return c;
             }
             return null;
-        }
-        public static void Ecriture1 (string sttsPath, List<Compte> listCompte, List<Transaction> listTransaction)
+        }*/
+        public static void Ecriture1(string sttsPath, List<Compte> listCompte, List<Transaction> listTransaction)
         {
-            string numero;
-            Transaction premierObjet = listTransaction[0];
-            string numerDuPremierObjet = premierObjet.Numero;
+            string ok = " ";
+            int trNumeroPrec = 0;
+            List<Compte> comptePrec = new List<Compte>();
+            comptePrec = listCompte;
 
             /*
              * Pour chaque transaction de ma liste:
@@ -34,68 +35,80 @@ namespace Projetpart1
 
             foreach (Transaction t in listTransaction)
             {
+                Console.WriteLine($"{t.Numero} : {t.Montant}$ de {t.Expéditeur} vers {t.Destinataire}");
                 //* Si l'expéditeur est égal à 0: c'est un dépôt: on rajoute le montant au destinataire
-                if(t.Expéditeur == "0")
+                if(t.Montant != 0)
                 {
-                    foreach (Compte c in listCompte)
+                    if(t.Numero >= trNumeroPrec)
                     {
-                        if(c.Numero == t.Destinataire)
+                        if (t.Destinataire != "0" && t.Expéditeur != "0")
                         {
-                            c.Solde += t.Solde;
-                        }
-                    }
-                }
+                            if (listCompte.Any(compte => compte.Numero.Equals(t.Destinataire)) && listCompte.Any(compte => compte.Numero.Equals(t.Expéditeur)))
+                            {
+                                foreach (Compte c in listCompte)
+                                {
+                                    if (c.Numero == t.Destinataire)
+                                    {
+                                        c.Solde += t.Montant;
+                                    }
 
-                if (t.Destinataire == "0")
-                {
-                    foreach (Compte c in listCompte)
-                    {
-                        if (c.Numero == t.Destinataire)
+                                    if (c.Numero == t.Expéditeur)
+                                    {
+                                        c.Solde -= t.Montant;
+                                    }
+                                }
+                            }
+                        }
+                        else if (t.Destinataire == "0" || t.Expéditeur == "0")
                         {
-                            c.Solde -= t.Solde;
+                            foreach (Compte c in listCompte)
+                            {
+                                if (c.Numero == t.Destinataire)
+                                {
+                                    c.Solde += t.Montant;
+                                }
+
+                                if (c.Numero == t.Expéditeur)
+                                {
+                                    c.Solde -= t.Montant;
+
+                                }
+                            }
                         }
                     }
                 }
-                // Effectuer le mouvement
-                // if t.expediteur == 0:
-                //   t.destinataire.Add
+                trNumeroPrec = t.Numero;
+                
+                Console.WriteLine("Statut des comptes");
+                Console.WriteLine("------------------");
+                foreach (Compte compte in listCompte)
+                {
+                    Console.WriteLine(compte.Numero + " " + compte.Solde);
+
+                }
+                Console.WriteLine();
             }
 
-            /*
-             * Opération:
-             * Si l'expéditeur est égal à 0: c'est un dépôt: on rajoute le montant au destinataire
-             * Si le destinataire est égal à 0 on enlève le montant à l'expéditeur
-             */ 
-
-            Transaction a = new Transaction(numero, solde, expéditeur, destinataire);
 
             using (StreamWriter fichierSortie = new StreamWriter(sttsPath))
             {
-                foreach (var numero in Transaction)
+                foreach (Transaction t in listTransaction)
                 {
-                    string lignetransaction = Transaction[3];
-                    //les mettre dans un tableau
-                    //Séparer les champs
-
-                    
-                    transaction.Add(a);
-                    if (Transaction[3] = "0")
-                }
-
-
-
-                foreach (KeyValuePair<string, List<float>> matiere in matieres)
-                {
-                    float moyenne;
-                    float sum = 0;
-                    //parcoure matiere.Value pour calculer la moyenne
-                    foreach (float note in matiere.Value)
+                    foreach (Compte c1 in listCompte)
                     {
-                        sum += note;
+                        foreach (Compte c2 in comptePrec)
+                        {
+                            if (c1.Solde != c2.Solde)
+                            {
+                                ok = "KO";
+                            }
+                            else if (c1.Solde == c2.Solde)
+                            {
+                                ok = "OK";
+                            }
+                        }
                     }
-                    // moyenne = condition ? si c'est vrai : si c'est faux
-                    moyenne = matiere.Value.Count == 0 ? 0 : sum / matiere.Value.Count;
-                    fichierSortie.WriteLine(matiere.Key + ";" + moyenne);
+                    fichierSortie.WriteLine(t.Numero + ";" + ok);
                 }
             }
         }

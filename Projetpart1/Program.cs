@@ -22,9 +22,7 @@ namespace Projetpart1
             cpt = Compte.ReadAcctFile(acctPath);
             tr = Transaction.ReadTrxnFile(trxnPath);
 
-
-
-            Ecriture.Ecriture1(cpt, tr);
+            Ecriture.Ecriture1(sttsPath,cpt, tr);
 
             // Keep the console window open
             Console.WriteLine("Press any key to exit.");
