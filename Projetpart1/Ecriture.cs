@@ -40,7 +40,7 @@ namespace Projetpart1
             {
                 Console.WriteLine($"{t.Numero} : {t.Montant}$ de {t.Expéditeur} vers {t.Destinataire}");
                 //* Si l'expéditeur est égal à 0: c'est un dépôt: on rajoute le montant au destinataire
-                if(t.Montant != 0)
+                if(t.Montant > 0)
                 {
                     if (t.Numero >= trNumeroPrec)
                     {
@@ -110,7 +110,7 @@ namespace Projetpart1
 
             using (StreamWriter fichierSortie = new StreamWriter(sttsPath))
             {
-                i = 1;
+                i = 0;
 
                 foreach (Transaction t in listTransaction)
                 {

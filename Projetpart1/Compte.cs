@@ -23,7 +23,7 @@ namespace Projetpart1
 
         public static List<Compte> ReadAcctFile(string acctPath)
         {
-            List<Compte> compte = new List<Compte>();
+            List<Compte> listCompte = new List<Compte>();
 
             //prendre les valeurs d'entrées du fichier
             using (StreamReader fichierEntree = new StreamReader(acctPath))
@@ -33,24 +33,34 @@ namespace Projetpart1
                     string ligneFichierEntree = fichierEntree.ReadLine();
                     //les mettre dans un tableau
                     //Séparer les champs
-                    string[] ligne1 = ligneFichierEntree.Split(';');
-
-                    Compte a = new Compte(ligne1[0], double.Parse(ligne1[1]));
-                    compte.Add(a);
-                    /*if (comptes.ContainsKey(ligne1[1]))
+                    bool isUnique = true;
+                    double solde;
+                    string[] ligne = ligneFichierEntree.Split(';');
+                    foreach (var item in listCompte)
                     {
-                        comptes[ligne1[1]].Add(float.Parse(ligne1[2]));
+                        if (ligne[0] == item.Numero)
+                        {
+                            isUnique = false;
+                        }
+                    }
+                    //isUnique = listCompte.Any(compte => compte.Numero.Equals(ligne[0]));
+                    if (!string.IsNullOrWhiteSpace(ligne[1]))
+                    {
+                        double.TryParse(ligne[1], out solde);
                     }
                     else
                     {
-                        comptes.Add(ligne1[1], new List<float>() { float.Parse(ligne1[2]) });
-                    }*/
+                        solde = 0;
+                    }
+
+                    if (isUnique && solde >= 0)
+                    {
+                        Compte c = new Compte(ligne[0], solde);
+                        listCompte.Add(c);
+                    }
                 }
             }
-
-            return compte;
-
-            //throw new NotImplementedException();
+            return listCompte;
         }
     }
 }
