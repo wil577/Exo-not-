@@ -21,7 +21,7 @@ namespace Projetpart1
             string sttsTrxnPath = path + @"\StatutTra_1.txt";
             string mtrlPath = path + @"\Metrologie_1.txt";
 
-            List<Compte> cpt = new List<Compte>();
+            Dictionary<int, Compte> cpt = new Dictionary<int, Compte>();
             List<Transaction> tr = new List<Transaction>();
             List<Gestionnaire> gstn = new List<Gestionnaire>();
 

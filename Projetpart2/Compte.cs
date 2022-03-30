@@ -10,20 +10,23 @@ namespace Projetpart1
 
     public class Compte
     {
-
-        public string Numero { get; set; }
-        public double Solde { get; set; }
-        public Compte(string numero, double solde)
+        public int Identifiant { get; set; }
+        public DateTime Date { get; set; }
+        public double SoldeIni { get; set; }
+        public int Entrée { get; set; }
+        public int Sortie { get; set; }
+        public Compte(int identifiant, DateTime date, double soldeIni,int entrée, int sortie)
         {
-            Numero = numero;
-            Solde = solde;
+            Identifiant = identifiant;
+            Date = date;
+            SoldeIni = soldeIni;
+            Entrée = entrée;
+            Sortie = sortie;
         }
 
-
-
-        public static List<Compte> ReadAcctFile(string acctPath)
+        public static Dictionary<int, Compte> ReadAcctFile(string acctPath)
         {
-            List<Compte> listCompte = new List<Compte>();
+            Dictionary<int ,Compte> listCompte = new Dictionary<int, Compte>();
 
             //prendre les valeurs d'entrées du fichier
             using (StreamReader fichierEntree = new StreamReader(acctPath))
@@ -35,28 +38,50 @@ namespace Projetpart1
                     //Séparer les champs
                     bool isUnique = true;
                     double solde;
+                    int sortie;
+                    int entrée;
                     string[] ligne = ligneFichierEntree.Split(';');
                     foreach (var item in listCompte)
                     {
-                        if (ligne[0] == item.Numero)
+                        if (int.Parse(ligne[0]) == item.Value.Identifiant)
                         {
                             isUnique = false;
                         }
                     }
                     //isUnique = listCompte.Any(compte => compte.Numero.Equals(ligne[0]));
-                    if (!string.IsNullOrWhiteSpace(ligne[1]))
+                    if (!string.IsNullOrWhiteSpace(ligne[2]))
                     {
-                        double.TryParse(ligne[1].Replace('.',','), out solde);
+                        double.TryParse(ligne[2].Replace('.',','), out solde);
                     }
                     else
                     {
                         solde = 0;
                     }
 
+                    //gestion espace pour l'entrée
+                    if (!string.IsNullOrWhiteSpace(ligne[3]))
+                    {
+                        int.TryParse(ligne[3].Replace('.', ','), out entrée);
+                    }
+                    else
+                    {
+                        entrée = 0;
+                    }
+
+                    //gestion espace pour la sortie
+                    if (!string.IsNullOrWhiteSpace(ligne[4]))
+                    {
+                        int.TryParse(ligne[4].Replace('.', ','), out sortie);
+                    }
+                    else
+                    {
+                        sortie = 0;
+                    }
+
                     if (isUnique && solde >= 0)
                     {
-                        Compte c = new Compte(ligne[0], solde);
-                        listCompte.Add(c);
+                        Compte c = new Compte(int.Parse(ligne[0]), DateTime.Parse(ligne[1]),solde, entrée, sortie);
+                        listCompte.Add(int.Parse(ligne[0]),c);
                     }
                 }
             }
