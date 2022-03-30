@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 namespace Projetpart1
 {
 
-    public class Compte_Transaction
+    public class Compte_Transaction : IComparable<Compte_Transaction>
     {
-        public int Identifiant { get; set; }
+        public string Identifiant { get; set; }
         public DateTime Date { get; set; }
         public double SoldeIni { get; set; }
-        public int Entrée { get; set; }
-        public int Sortie { get; set; }
+        public string Entrée { get; set; }
+        public string Sortie { get; set; }
         public string Type { get; set; }
-        public Compte_Transaction(int identifiant, DateTime date, double soldeIni, int entrée, int sortie, string type)
+        public Compte_Transaction(string identifiant, DateTime date, double soldeIni, string entrée, string sortie, string type)
         {
             Identifiant = identifiant;
             Date = date;
@@ -25,6 +25,41 @@ namespace Projetpart1
             Sortie = sortie;
             Type = type;
         }
+
+        public int CompareTo(Compte_Transaction other)
+        {
+            // If other is not a valid object reference, this instance is greater.
+            if (other == null) return 1;
+
+            // The temperature comparison depends on the comparison of
+            // the underlying Double values.
+            return Date.CompareTo(other.Date);
+        }
+
+        // Define the is greater than operator.
+        public static bool operator >(Compte_Transaction operand1, Compte_Transaction operand2)
+        {
+            return operand1.CompareTo(operand2) > 0;
+        }
+
+        // Define the is less than operator.
+        public static bool operator <(Compte_Transaction operand1, Compte_Transaction operand2)
+        {
+            return operand1.CompareTo(operand2) < 0;
+        }
+
+        // Define the is greater than or equal to operator.
+        public static bool operator >=(Compte_Transaction operand1, Compte_Transaction operand2)
+        {
+            return operand1.CompareTo(operand2) >= 0;
+        }
+
+        // Define the is less than or equal to operator.
+        public static bool operator <=(Compte_Transaction operand1, Compte_Transaction operand2)
+        {
+            return operand1.CompareTo(operand2) <= 0;
+        }
+
 
         public static List<Compte_Transaction> ReadAcctFile(string acctPath, string trxnPath)
         {
@@ -40,8 +75,8 @@ namespace Projetpart1
                     //Séparer les champs
                     bool isUnique = true;
                     double solde;
-                    int sortie;
-                    int entrée;
+                    string sortie = "";
+                    string entrée = "";
                     string[] ligne = ligneFichierEntree.Split(';');
                     /*foreach (var item in listCompte)
                     {
@@ -63,26 +98,26 @@ namespace Projetpart1
                     //gestion espace pour l'entrée
                     if (!string.IsNullOrWhiteSpace(ligne[3]))
                     {
-                        int.TryParse(ligne[3].Replace('.', ','), out entrée);
+                        //int.TryParse(ligne[3].Replace('.', ','), out entrée);
                     }
                     else
                     {
-                        entrée = 0;
+                        entrée = null;
                     }
 
                     //gestion espace pour la sortie
                     if (!string.IsNullOrWhiteSpace(ligne[4]))
                     {
-                        int.TryParse(ligne[4].Replace('.', ','), out sortie);
+                        //int.TryParse(ligne[4].Replace('.', ','), out sortie);
                     }
                     else
                     {
-                        sortie = 0;
+                        sortie = null;
                     }
 
                     //if (isUnique && solde >= 0)
                     //{
-                    Compte_Transaction c = new Compte_Transaction(int.Parse(ligne[0]), DateTime.Parse(ligne[1]), solde, entrée, sortie, "1");
+                    Compte_Transaction c = new Compte_Transaction(ligne[0], DateTime.Parse(ligne[1]), solde, entrée, sortie, "1");
                     listCompte.Add(c);
                     //}
                 }
@@ -97,15 +132,15 @@ namespace Projetpart1
                     //Séparer les champs
                     string[] ligne1 = ligneFichierEntree.Split(';');
 
-                    Compte_Transaction c = new Compte_Transaction(int.Parse(ligne1[0]), DateTime.Parse(ligne1[1]), double.Parse(ligne1[2]), int.Parse(ligne1[3]), int.Parse(ligne1[4]), "2");
+                    Compte_Transaction c = new Compte_Transaction(ligne1[0], DateTime.Parse(ligne1[1]), double.Parse(ligne1[2]), ligne1[3], ligne1[4], "2");
                     listCompte.Add(c);
                 }
             }
             Console.WriteLine("ID   DATE            Solde  E  S  TYPE");
+            listCompte.Sort();
             foreach (Compte_Transaction compte in listCompte)
             {
                 Console.WriteLine(compte.Identifiant + " " + compte.Date + " " + compte.SoldeIni + "  " + compte.Entrée + "  " + compte.Sortie + "  " + compte.Type);
-
             }
             return listCompte;
         }

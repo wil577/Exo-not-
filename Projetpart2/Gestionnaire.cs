@@ -9,19 +9,22 @@ namespace Projetpart1
 {
     public class Gestionnaire
     {
-        public int Identifiant { get; set; }
+        public string Identifiant { get; set; }
         public string Type { get; set; }
         public int NbTransaction { get; set; }
-        public Gestionnaire(int identifiant, string type, int nbTransaction)
+        public List<Compte> Compte { get; set; }
+        public Gestionnaire(string identifiant, string type, int nbTransaction, List<Compte> compte)
         {
             Identifiant = identifiant;
             Type = type;
             NbTransaction = nbTransaction;
+            Compte = compte;
         }
 
         public static List<Gestionnaire> ReadGstnFile(string trxnPath)
         {
             List<Gestionnaire> gestionnaire = new List<Gestionnaire>();
+            List<Compte> compte = new List<Compte>();
             //prendre les valeurs d'entrées du fichier
             using (StreamReader fichierEntree = new StreamReader(trxnPath))
             {
@@ -32,7 +35,7 @@ namespace Projetpart1
                     //Séparer les champs
                     string[] ligne1 = ligneFichierEntree.Split(';');
 
-                    Gestionnaire a = new Gestionnaire(int.Parse(ligne1[0]), ligne1[1], int.Parse(ligne1[2]));
+                    Gestionnaire a = new Gestionnaire(ligne1[0], ligne1[1], int.Parse(ligne1[2]), compte);
                     gestionnaire.Add(a);
                 }
             }

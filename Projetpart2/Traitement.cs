@@ -26,20 +26,48 @@ namespace Projetpart1
             int trNumeroPrec = 0;
             List<Compte_Transaction> comptePrec = new List<Compte_Transaction>();
             comptePrec = listCompte_Transaction;
+            List<Compte> listCompte = new List<Compte>();
+
+            /*foreach (var item in listCompte_Transaction)
+            {
+                if (item.Type == "1")
+                {
+                    listCompte.Add(item);
+                }
+            }*/
 
             /*ecrire fichier statut comptes : IDENTIFIANT ; STATUT
-             *
-             *
+             ********* Création si compte n'existe pas : ******
+             *champ ENTREE renseigné
+             *et date correspond à celle de souscription
+             ********* Cloture de compte si :  *******************
+             *Champ sortie renseigné 
+             *et date correspond à celle de résiliation
+             ********* Echange de compte si : *****************
+             *les deux champs sont renseignés 
+             *et date correspond à la date de transfert
             */
-            using (StreamWriter fichierSortieOpe = new StreamWriter(sttsAcctPath))
+            
+            foreach (var compte in listCompte_Transaction)
             {
-                foreach (var item in listCompte_Transaction)
+                if(compte.Type == "1")
                 {
-                    if(item.Type == "1")
+                    foreach(var gstn in listGstn)
                     {
-                        Console.WriteLine("ECRITURE");
-                        fichierSortieOpe.WriteLine(item.Identifiant + ";" + "OK");
+                        if(gstn.Identifiant == compte.Entrée)
+                        {
+                            //Compte_Transaction exp = listCompte_Transaction.Exists(x => x.Identifiant.Equals(item.Identifiant));
+
+                            Console.WriteLine(compte.Identifiant + "ECRIT");
+                            Compte c = new Compte(compte.Identifiant, compte.Date, compte.SoldeIni, compte.Entrée, compte.Sortie);
+                            gstn.Compte.Add(c);
+                            //listCompte.Add(c);
+                            results.Add($"{compte.Identifiant};OK");
+                            //fichierSortieOpe.WriteLine(item.Identifiant + ";" + "OK");
+                        }
+                        
                     }
+                        listCompte.Clear();
                 }
             }
 
@@ -47,13 +75,21 @@ namespace Projetpart1
 
 
             Console.WriteLine("Statut des comptes");
-                Console.WriteLine("------------------");
-                /*foreach (Compte_Transaction compte in listCompte_Transaction)
-                {
-                    Console.WriteLine(compte.Numero + " " + compte.Solde);
+            Console.WriteLine("------------------");
+            /*foreach (Compte_Transaction compte in listCompte_Transaction)
+            {
+                Console.WriteLine(compte.Numero + " " + compte.Solde);
 
-                }*/
-                Console.WriteLine();
+            }*/
+
+            using (StreamWriter fichierSortie = new StreamWriter(sttsAcctPath))
+            {
+                foreach (string r in results)
+                {
+                    fichierSortie.WriteLine(r);
+                }
+            }
+            Console.WriteLine();
         }
     }
 }
