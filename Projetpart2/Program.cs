@@ -21,13 +21,15 @@ namespace Projetpart1
             string sttsTrxnPath = path + @"\StatutTra_1.txt";
             string mtrlPath = path + @"\Metrologie_1.txt";
 
-            Dictionary<int, Compte> cpt = new Dictionary<int, Compte>();
-            List<Transaction> tr = new List<Transaction>();
+            List<Compte_Transaction> cpt = new List<Compte_Transaction>();
+            //Dictionary<int, Transaction> tr = new Dictionary<int, Transaction>();
             List<Gestionnaire> gstn = new List<Gestionnaire>();
 
-            cpt = Compte.ReadAcctFile(acctPath);
-            tr = Transaction.ReadTrxnFile(trxnPath);
+            cpt = Compte_Transaction.ReadAcctFile(acctPath, trxnPath);
+            //tr = Transaction.ReadTrxnFile(trxnPath);
             gstn = Gestionnaire.ReadGstnFile(mngrPath);
+
+            EcritureTr.Traitement(sttsAcctPath,sttsTrxnPath, mtrlPath,cpt,gstn);
 
             //Ecriture.Ecriture1(sttsPath,cpt, tr);
 
