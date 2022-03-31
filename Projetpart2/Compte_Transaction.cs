@@ -74,10 +74,18 @@ namespace Projetpart1
                     //les mettre dans un tableau
                     //Séparer les champs
                     bool isUnique = true;
-                    double solde;
-                    string sortie = "";
-                    string entrée = "";
                     string[] ligne = ligneFichierEntree.Split(';');
+                    //gestion espace/vide pour solde
+                    DateTime date = !string.IsNullOrWhiteSpace(ligne[1]) && DateTime.TryParse(ligne[1], out DateTime dt) ? dt : DateTime.MinValue;
+                    //gestion espace/vide pour solde
+                    double solde = !string.IsNullOrWhiteSpace(ligne[2]) && double.TryParse(ligne[2], out double d) ? d : 0;
+                    //gestion espace/vide pour l'entrée
+                    string entrée = !string.IsNullOrWhiteSpace(ligne[3]) ? ligne[3] : string.Empty;
+                    //gestion espace/vide pour la sortie
+                    string sortie = !string.IsNullOrWhiteSpace(ligne[4]) ? ligne[4] : string.Empty;
+
+                    //entrée = ligne[3];
+                    //sortie = ligne[4];
                     /*foreach (var item in listCompte)
                     {
                         if (int.Parse(ligne[0]) == item.Identifiant)
@@ -86,38 +94,28 @@ namespace Projetpart1
                         }
                     }*/
                     //isUnique = listCompte.Any(compte => compte.Numero.Equals(ligne[0]));
-                    if (!string.IsNullOrWhiteSpace(ligne[2]))
-                    {
-                        double.TryParse(ligne[2].Replace('.', ','), out solde);
-                    }
-                    else
-                    {
-                        solde = 0;
-                    }
-
-                    //gestion espace pour l'entrée
-                    if (!string.IsNullOrWhiteSpace(ligne[3]))
-                    {
-                        //int.TryParse(ligne[3].Replace('.', ','), out entrée);
-                    }
-                    else
-                    {
-                        entrée = null;
-                    }
+                    //if (!string.IsNullOrWhiteSpace(ligne[2]))
+                    //{
+                    //    double.TryParse(ligne[2].Replace('.', ','), out solde);
+                    //}
+                    //else
+                    //{
+                    //    solde = 0;
+                    //}
 
                     //gestion espace pour la sortie
-                    if (!string.IsNullOrWhiteSpace(ligne[4]))
-                    {
-                        //int.TryParse(ligne[4].Replace('.', ','), out sortie);
-                    }
-                    else
-                    {
-                        sortie = null;
-                    }
+                    //if (!string.IsNullOrWhiteSpace(ligne[4]))
+                    //{
+                    //    //int.TryParse(ligne[4].Replace('.', ','), out sortie);
+                    //}
+                    //else
+                    //{
+                    //    sortie = null;
+                    //}
 
                     //if (isUnique && solde >= 0)
                     //{
-                    Compte_Transaction c = new Compte_Transaction(ligne[0], DateTime.Parse(ligne[1]), solde, entrée, sortie, "1");
+                    Compte_Transaction c = new Compte_Transaction(ligne[0], date, solde, entrée, sortie, "1");
                     listCompte.Add(c);
                     //}
                 }
