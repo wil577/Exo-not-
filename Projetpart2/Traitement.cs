@@ -23,18 +23,9 @@ namespace Projetpart1
         {
 
             List<string> results = new List<string>();
-            int trNumeroPrec = 0;
             List<Compte_Transaction> comptePrec = new List<Compte_Transaction>();
             comptePrec = listCompte_Transaction;
             List<Compte> listCompte = new List<Compte>();
-
-            /*foreach (var item in listCompte_Transaction)
-            {
-                if (item.Type == "1")
-                {
-                    listCompte.Add(item);
-                }
-            }*/
 
             /*ecrire fichier statut comptes : IDENTIFIANT ; STATUT
              ********* Création si compte n'existe pas : ******
@@ -53,7 +44,6 @@ namespace Projetpart1
             {
                 if (compte_Transaction.Type == "1")
                 {
-                    //TODO: Traiter opération
                     if (compte_Transaction.SoldeIni >= 0)
                     {
                         //Création
@@ -65,7 +55,6 @@ namespace Projetpart1
                                 {
                                     Console.WriteLine(compte_Transaction.Identifiant + "ECRIT");
                                     Compte c = new Compte(compte_Transaction.Identifiant, compte_Transaction.Date, compte_Transaction.SoldeIni, compte_Transaction.Entrée, compte_Transaction.Sortie, gstn.Identifiant);
-                                    //listCompte.Add(c);
                                     gstn.Compte.Add(c);
                                     results.Add($"{compte_Transaction.Identifiant};OK");
                                     break;
@@ -92,16 +81,8 @@ namespace Projetpart1
                                     {
                                         isOk = true;
                                         Console.WriteLine(compte_Transaction.Identifiant + "SUPRRESSION");
-                                        //Compte c = new Compte(compte_Transaction.Identifiant, compte_Transaction.Date, compte_Transaction.SoldeIni, compte_Transaction.Entrée, compte_Transaction.Sortie, compte_Transaction.Sortie);
-                                        //listCompte.RemoveAll(x=>x.Identifiant.Equals(compte_Transaction.Sortie));
                                         gstn.Compte.RemoveAt(i);
                                     }
-                                    //else
-                                    //{
-                                    //    Console.WriteLine(compte_Transaction.Identifiant + "SUPRRESSION NON");
-                                    //    results.Add($"{compte_Transaction.Identifiant};KO");
-                                    //    //break;
-                                    //}
                                 }
                             }
                         }
@@ -114,50 +95,35 @@ namespace Projetpart1
                         {
                             Console.WriteLine(compte_Transaction.Identifiant + "SUPRRESSION NON");
                             results.Add($"{compte_Transaction.Identifiant};KO");
-                            //break;
                         }
                     }
 
                     if (!string.IsNullOrEmpty(compte_Transaction.Entrée) && !string.IsNullOrEmpty(compte_Transaction.Sortie))
                     {
+                        bool isOk = false;
                         foreach (var gstn in listGstn)
                         {
                             for (int i = 0; i < gstn.Compte.Count; i++)
                             {
-                                if (compte_Transaction.Sortie == gstn.Identifiant)
+                                if (compte_Transaction.Sortie == gstn.Identifiant && compte_Transaction.Entrée == gstn.Compte[i].IdGestionnaire)
                                 {
                                     if (gstn.Compte[i].Identifiant == compte_Transaction.Identifiant)
                                     {
-                                        if (gstn.Compte[i].IdGestionnaire.Equals(compte_Transaction.Sortie))
-                                        {
+                                            isOk = true; 
                                             Console.WriteLine(compte_Transaction.Identifiant + "CESSION");
-                                            //Compte c = new Compte(compte_Transaction.Identifiant, compte_Transaction.Date, compte_Transaction.SoldeIni, compte_Transaction.Entrée, compte_Transaction.Sortie, compte_Transaction.Sortie);
-                                            //listCompte.RemoveAll(x=>x.Identifiant.Equals(compte_Transaction.Sortie));
-                                            gstn.Compte.RemoveAt(i);
-                                            results.Add($"{compte_Transaction.Identifiant};OK");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine(compte_Transaction.Identifiant + "CESSION NON");
-                                            results.Add($"{compte_Transaction.Identifiant};KO");
-                                            //break;
-                                        }
                                     }
                                 }
-
                             }
                         }
+                        if(isOk)
+                        {
+                            results.Add($"{compte_Transaction.Identifiant};OK");
+                        }
+                        else
+                        {
+                            results.Add($"{compte_Transaction.Identifiant};KO");
+                        }
                     }
-
-
-
-
-                    //if (gstn.Identifiant == compte_Transaction.Entrée)
-                    //{
-                    //Compte_Transaction exp = listCompte_Transaction.Exists(x => x.Identifiant.Equals(item.Identifiant));
-
-                    //fichierSortieOpe.WriteLine(item.Identifiant + ";" + "OK");
-                    //}
                 }
                 else if (compte_Transaction.Type == "2")
                 {
