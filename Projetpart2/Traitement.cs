@@ -79,33 +79,77 @@ namespace Projetpart1
                         break;
                     }
 
-                    if(string.IsNullOrEmpty(compte_Transaction.Entrée) && !string.IsNullOrEmpty(compte_Transaction.Sortie))
+                    if (string.IsNullOrEmpty(compte_Transaction.Entrée) && !string.IsNullOrEmpty(compte_Transaction.Sortie))
                     {
+                        bool isOk = false;
                         foreach (var gstn in listGstn)
                         {
-                            for (int i = 0; i < gstn.Compte.Count; i++)
+                            for (int i = 0; i < gstn.Compte.Count && !isOk; i++)
                             {
                                 if (gstn.Compte[i].Identifiant == compte_Transaction.Identifiant)
                                 {
                                     if (gstn.Compte[i].IdGestionnaire.Equals(compte_Transaction.Sortie))
                                     {
+                                        isOk = true;
                                         Console.WriteLine(compte_Transaction.Identifiant + "SUPRRESSION");
                                         //Compte c = new Compte(compte_Transaction.Identifiant, compte_Transaction.Date, compte_Transaction.SoldeIni, compte_Transaction.Entrée, compte_Transaction.Sortie, compte_Transaction.Sortie);
                                         //listCompte.RemoveAll(x=>x.Identifiant.Equals(compte_Transaction.Sortie));
                                         gstn.Compte.RemoveAt(i);
-                                        results.Add($"{compte_Transaction.Identifiant};OK");
                                     }
-                                    else
-                                    {
-                                        Console.WriteLine(compte_Transaction.Identifiant + "SUPRRESSION NON");
-                                        results.Add($"{compte_Transaction.Identifiant};KO");
-                                        //break;
-                                    }
+                                    //else
+                                    //{
+                                    //    Console.WriteLine(compte_Transaction.Identifiant + "SUPRRESSION NON");
+                                    //    results.Add($"{compte_Transaction.Identifiant};KO");
+                                    //    //break;
+                                    //}
                                 }
                             }
                         }
+                        if (isOk)
+                        {
+                            results.Add($"{compte_Transaction.Identifiant};OK");
+
+                        }
+                        else
+                        {
+                            Console.WriteLine(compte_Transaction.Identifiant + "SUPRRESSION NON");
+                            results.Add($"{compte_Transaction.Identifiant};KO");
+                            //break;
+                        }
                     }
-                
+
+                    if (!string.IsNullOrEmpty(compte_Transaction.Entrée) && !string.IsNullOrEmpty(compte_Transaction.Sortie))
+                    {
+                        foreach (var gstn in listGstn)
+                        {
+                            for (int i = 0; i < gstn.Compte.Count; i++)
+                            {
+                                if (compte_Transaction.Sortie == gstn.Identifiant)
+                                {
+                                    if (gstn.Compte[i].Identifiant == compte_Transaction.Identifiant)
+                                    {
+                                        if (gstn.Compte[i].IdGestionnaire.Equals(compte_Transaction.Sortie))
+                                        {
+                                            Console.WriteLine(compte_Transaction.Identifiant + "CESSION");
+                                            //Compte c = new Compte(compte_Transaction.Identifiant, compte_Transaction.Date, compte_Transaction.SoldeIni, compte_Transaction.Entrée, compte_Transaction.Sortie, compte_Transaction.Sortie);
+                                            //listCompte.RemoveAll(x=>x.Identifiant.Equals(compte_Transaction.Sortie));
+                                            gstn.Compte.RemoveAt(i);
+                                            results.Add($"{compte_Transaction.Identifiant};OK");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine(compte_Transaction.Identifiant + "CESSION NON");
+                                            results.Add($"{compte_Transaction.Identifiant};KO");
+                                            //break;
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+
 
 
                     //if (gstn.Identifiant == compte_Transaction.Entrée)
