@@ -22,7 +22,8 @@ namespace Projetpart1
         public static void Traitement(string sttsAcctPath, string sttsTrxnPath, string mtrlPath, List<Compte_Transaction> listCompte_Transaction, List<Gestionnaire> listGstn)
         {
 
-            List<string> results = new List<string>();
+            List<string> resultsC = new List<string>();
+            List<string> resultsT = new List<string>();
             List<Compte_Transaction> comptePrec = new List<Compte_Transaction>();
             comptePrec = listCompte_Transaction;
             List<Compte> listCompte = new List<Compte>();
@@ -40,15 +41,24 @@ namespace Projetpart1
              *les deux champs sont renseignés 
              *et date correspond à la date de transfert
             */
+
+            foreach (Gestionnaire g in listGstn)
+            {
+                foreach (Compte c in g.Compte)
+                {
+                    Console.WriteLine($"{g.Identifiant}: POSSEDE : {c.Identifiant}");
+                }
+            }
+
             foreach (var compte_Transaction in listCompte_Transaction)
             {
                 if (compte_Transaction.Type == "1")
                 {
                     if (compte_Transaction.SoldeIni >= 0)
                     {
-                        //Création
                         if (!string.IsNullOrEmpty(compte_Transaction.Entrée) && string.IsNullOrEmpty(compte_Transaction.Sortie))
                         {
+                            //Création
                             foreach (var gstn in listGstn)
                             {
                                 if (gstn.Identifiant.Equals(compte_Transaction.Entrée))
@@ -56,15 +66,15 @@ namespace Projetpart1
                                     Console.WriteLine(compte_Transaction.Identifiant + "ECRIT");
                                     Compte c = new Compte(compte_Transaction.Identifiant, compte_Transaction.Date, compte_Transaction.SoldeIni, compte_Transaction.Entrée, compte_Transaction.Sortie, gstn.Identifiant);
                                     gstn.Compte.Add(c);
-                                    results.Add($"{compte_Transaction.Identifiant};OK");
+                                    resultsC.Add($"{compte_Transaction.Identifiant};OK");
                                     break;
                                 }
-                            }
+                            }   
                         }
                     }
                     else
                     {
-                        results.Add($"{compte_Transaction.Identifiant};KO");
+                        resultsC.Add($"{compte_Transaction.Identifiant};KO");
                         break;
                     }
 
@@ -88,13 +98,13 @@ namespace Projetpart1
                         }
                         if (isOk)
                         {
-                            results.Add($"{compte_Transaction.Identifiant};OK");
+                            resultsC.Add($"{compte_Transaction.Identifiant};OK");
 
                         }
                         else
                         {
                             Console.WriteLine(compte_Transaction.Identifiant + "SUPRRESSION NON");
-                            results.Add($"{compte_Transaction.Identifiant};KO");
+                            resultsC.Add($"{compte_Transaction.Identifiant};KO");
                         }
                     }
 
@@ -103,25 +113,28 @@ namespace Projetpart1
                         bool isOk = false;
                         foreach (var gstn in listGstn)
                         {
-                            for (int i = 0; i < gstn.Compte.Count; i++)
+                            for (int i = 0; i < gstn.Compte.Count && !isOk; i++)
                             {
                                 if (compte_Transaction.Sortie == gstn.Identifiant && compte_Transaction.Entrée == gstn.Compte[i].IdGestionnaire)
                                 {
                                     if (gstn.Compte[i].Identifiant == compte_Transaction.Identifiant)
                                     {
-                                            isOk = true; 
-                                            Console.WriteLine(compte_Transaction.Identifiant + "CESSION");
+                                        isOk = true;
+                                        gstn.Compte.RemoveAt(i);
+                                        Compte c = new Compte(compte_Transaction.Identifiant, compte_Transaction.Date, compte_Transaction.SoldeIni, compte_Transaction.Entrée, compte_Transaction.Sortie, gstn.Identifiant);
+                                        gstn.Compte.Add(c);
+                                        Console.WriteLine(compte_Transaction.Identifiant + "CESSION");
                                     }
                                 }
                             }
                         }
-                        if(isOk)
+                        if (isOk)
                         {
-                            results.Add($"{compte_Transaction.Identifiant};OK");
+                            resultsC.Add($"{compte_Transaction.Identifiant};OK");
                         }
                         else
                         {
-                            results.Add($"{compte_Transaction.Identifiant};KO");
+                            resultsC.Add($"{compte_Transaction.Identifiant};KO");
                         }
                     }
                 }
@@ -130,7 +143,6 @@ namespace Projetpart1
                     //TODO: Traiter transaction
                 }
             }
-
 
 
 
@@ -147,11 +159,29 @@ namespace Projetpart1
 
             using (StreamWriter fichierSortie = new StreamWriter(sttsAcctPath))
             {
-                foreach (string r in results)
+                foreach (string r in resultsC)
                 {
                     fichierSortie.WriteLine(r);
                 }
             }
+
+            using (StreamWriter fichierSortie = new StreamWriter(sttsTrxnPath))
+            {
+                foreach (string r in resultsT)
+                {
+                    fichierSortie.WriteLine(r);
+                }
+            }
+
+            foreach (Gestionnaire g in listGstn)
+            {
+                foreach (Compte c in g.Compte)
+                {
+                    Console.WriteLine($"{g.Identifiant}: POSSEDE : {c.Identifiant}");
+                }
+            }
+
+
             Console.WriteLine();
         }
     }
